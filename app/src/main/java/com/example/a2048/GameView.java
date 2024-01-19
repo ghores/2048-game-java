@@ -71,11 +71,15 @@ public class GameView extends AppCompatImageView {
 
     private void dropNextNumber() {
         boolean gameFinished = true;
+        int freeCells = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (cells[i][j] == 0) {
-                    gameFinished = false;
-                    break;
+                    freeCells++;
+                    if (freeCells > 1) {
+                        gameFinished = false;
+                        break;
+                    }
                 }
             }
         }
@@ -115,10 +119,36 @@ public class GameView extends AppCompatImageView {
         }
     }
 
+    private void goToLeft() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (j > 0) {
+                    int k = j;
+                    while (k > 0 && cells[i][k - 1] == 0) {
+                        cells[i][k - 1] = cells[i][k];
+                        cells[i][k] = 0;
+                        k--;
+                    }
+                    if (k > 0) {
+                        if (cells[i][k - 1] == cells[i][k]) {
+                            cells[i][k - 1] *= 2;
+                            cells[i][k] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        invalidate();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        dropNextNumber();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                dropNextNumber();
+                break;
+        }
         return true;
     }
 }
