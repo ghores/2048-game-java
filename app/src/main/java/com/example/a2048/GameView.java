@@ -168,7 +168,7 @@ public class GameView extends AppCompatImageView {
             for (int i = 0; i < 4; i++) {
                 if (i > 0) {
                     int k = i;
-                    while (k > 0 && cells[k-1][j] == 0) {
+                    while (k > 0 && cells[k - 1][j] == 0) {
                         cells[k - 1][j] = cells[k][j];
                         cells[k][j] = 0;
                         k--;
@@ -176,6 +176,28 @@ public class GameView extends AppCompatImageView {
                     if (k > 0) {
                         if (cells[k - 1][j] == cells[k][j]) {
                             cells[k - 1][j] *= 2;
+                            cells[k][j] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        invalidate();
+    }
+
+    private void goToDown() {
+        for (int j = 3; j >= 0; j--) {
+            for (int i = 3; i >= 0; i--) {
+                if (i < 3) {
+                    int k = i;
+                    while (k < 3 && cells[k + 1][j] == 0) {
+                        cells[k + 1][j] = cells[k][j];
+                        cells[k][j] = 0;
+                        k++;
+                    }
+                    if (k < 3) {
+                        if (cells[k + 1][j] == cells[k][j]) {
+                            cells[k + 1][j] *= 2;
                             cells[k][j] = 0;
                         }
                     }
