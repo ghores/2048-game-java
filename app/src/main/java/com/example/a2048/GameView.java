@@ -141,6 +141,28 @@ public class GameView extends AppCompatImageView {
         invalidate();
     }
 
+    private void goToRight() {
+        for (int i = 3; i >= 0; i--) {
+            for (int j = 3; j >= 0; j--) {
+                if (j < 3) {
+                    int k = j;
+                    while (k < 3 && cells[i][k + 1] == 0) {
+                        cells[i][k + 1] = cells[i][k];
+                        cells[i][k] = 0;
+                        k++;
+                    }
+                    if (k < 3) {
+                        if (cells[i][k + 1] == cells[i][k]) {
+                            cells[i][k + 1] *= 2;
+                            cells[i][k] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        invalidate();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
