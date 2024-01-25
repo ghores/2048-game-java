@@ -59,7 +59,9 @@ public class GameView extends AppCompatImageView {
         height = getHeight();
     }
 
-    private void resetGame() {
+    public void resetGame() {
+        G.score = 0;
+        G.updateScore();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 cells[i][j] = 0;
@@ -120,6 +122,12 @@ public class GameView extends AppCompatImageView {
         }
     }
 
+    public void power(int i, int j) {
+        cells[i][j] *= 2;
+        G.score += cells[i][j];
+        G.updateScore();
+    }
+
     /*
      *      2   4
      *  2          2
@@ -146,7 +154,7 @@ public class GameView extends AppCompatImageView {
                     }
                     if (k > 0) {
                         if (cells[i][k - 1] == cells[i][k]) {
-                            cells[i][k - 1] *= 2;
+                            power(i, k - 1);
                             cells[i][k] = 0;
                         }
                     }
@@ -182,7 +190,7 @@ public class GameView extends AppCompatImageView {
                     }
                     if (k < 3) {
                         if (cells[i][k + 1] == cells[i][k]) {
-                            cells[i][k + 1] *= 2;
+                            power(i, k + 1);
                             cells[i][k] = 0;
                         }
                     }
@@ -218,7 +226,7 @@ public class GameView extends AppCompatImageView {
                     }
                     if (k > 0) {
                         if (cells[k - 1][j] == cells[k][j]) {
-                            cells[k - 1][j] *= 2;
+                            power(k - 1, j);
                             cells[k][j] = 0;
                         }
                     }
@@ -254,7 +262,7 @@ public class GameView extends AppCompatImageView {
                     }
                     if (k < 3) {
                         if (cells[k + 1][j] == cells[k][j]) {
-                            cells[k + 1][j] *= 2;
+                            power(k + 1, j);
                             cells[k][j] = 0;
                         }
                     }
@@ -332,25 +340,21 @@ public class GameView extends AppCompatImageView {
 
                 switch (mode) {
                     case MODE_LEFT:
-                        Toast.makeText(getContext(), "To Left!!!", Toast.LENGTH_SHORT).show();
                         goToUp();
                         dropNextNumber();
                         break;
 
                     case MODE_RIGHT:
-                        Toast.makeText(getContext(), "To Right!!!", Toast.LENGTH_SHORT).show();
                         goToDown();
                         dropNextNumber();
                         break;
 
                     case MODE_UP:
-                        Toast.makeText(getContext(), "To Up!!!", Toast.LENGTH_SHORT).show();
                         goToLeft();
                         dropNextNumber();
                         break;
 
                     case MODE_DOWN:
-                        Toast.makeText(getContext(), "To Down!!!", Toast.LENGTH_SHORT).show();
                         goToRight();
                         dropNextNumber();
                         break;
