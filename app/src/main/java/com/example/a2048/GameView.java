@@ -19,7 +19,7 @@ public class GameView extends AppCompatImageView {
     private Paint textPaint;
     private int width;
     private int height;
-    private byte[][] cells = new byte[4][4];
+    private int[][] cells = new int[4][4];
 
     public GameView(Context context) {
         super(context);
@@ -107,6 +107,7 @@ public class GameView extends AppCompatImageView {
         int padding = 5;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
+                paint.setColor(Color.parseColor(getNumberColor(cells[i][j])));
                 @SuppressLint("DrawAllocation") Rect rect = new Rect(
                         i * size + padding, j * size + padding,
                         (i + 1) * size - padding,
@@ -272,6 +273,26 @@ public class GameView extends AppCompatImageView {
     public static final int MODE_RIGHT = 2;
     public static final int MODE_UP = 3;
     public static final int MODE_DOWN = 4;
+
+    private String getNumberColor(int number) {
+        switch (number) {
+            case 0:
+                return "#ccc0b3";
+            case 2:
+                return "#eee4da";
+            case 4:
+                return "#ede0c8";
+            case 8:
+                return "#f2b179";
+            case 16:
+                return "#f59563";
+            case 32:
+                return "#f67c5f";
+            case 64:
+                return "#f65e3b";
+        }
+        return "#ccc0b3";
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
