@@ -119,6 +119,20 @@ public class GameView extends AppCompatImageView {
         }
     }
 
+    /*
+     *      2   4
+     *  2          2
+     *      2
+     *              8
+     */
+
+    /*
+     *  2   4
+     *  4
+     *  2
+     *  8
+     */
+
     private void goToLeft() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -140,6 +154,20 @@ public class GameView extends AppCompatImageView {
         }
         invalidate();
     }
+
+    /*
+     *      2  4
+     *  2         2
+     *      2
+     *  8      2  8
+     */
+
+    /*
+     *         2  4
+     *            4
+     *            2
+     *      8  2  8
+     */
 
     private void goToRight() {
         for (int i = 3; i >= 0; i--) {
@@ -163,7 +191,21 @@ public class GameView extends AppCompatImageView {
         invalidate();
     }
 
-    private void goToTop() {
+    /*
+     *      2  4
+     *  2         2
+     *      2
+     *  8      2  8
+     */
+
+    /*
+     *   2  4  4  2
+     *   8     2  8
+     *
+     *
+     */
+
+    private void goToUp() {
         for (int j = 0; j < 4; j++) {
             for (int i = 0; i < 4; i++) {
                 if (i > 0) {
@@ -185,6 +227,20 @@ public class GameView extends AppCompatImageView {
         invalidate();
     }
 
+
+    /*
+     *      2  4
+     *  2         2
+     *      2
+     *  8      2  8
+     */
+
+    /*
+     *
+     *
+     *   2     4  2
+     *   8  4  2  8
+     */
     private void goToDown() {
         for (int j = 3; j >= 0; j--) {
             for (int i = 3; i >= 0; i--) {
@@ -207,12 +263,77 @@ public class GameView extends AppCompatImageView {
         invalidate();
     }
 
+    private float lastDownX;
+    private float lastDownY;
+
+    private boolean movePending;
+
+    public static final int MODE_LEFT = 1;
+    public static final int MODE_RIGHT = 2;
+    public static final int MODE_UP = 3;
+    public static final int MODE_DOWN = 4;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                dropNextNumber();
+                lastDownX = event.getRawX();
+                lastDownY = event.getRawY();
+                movePending = true;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (!movePending) {
+                    return true;
+                }
+
+                int mode = 0;
+                float diffX = lastDownX - event.getRawX();
+                float diffY = lastDownY - event.getRawY();
+
+                if (Math.abs(diffX) > 10 && Math.abs(diffX) > 2 * Math.abs(diffY)) {
+                    if (diffX > 0) {
+                        mode = MODE_LEFT;
+                    } else {
+                        mode = MODE_RIGHT;
+                    }
+                    movePending = false;
+                }
+                if (Math.abs(diffY) > 10 && Math.abs(diffY) > 2 * Math.abs(diffX)) {
+                    if (diffY > 0) {
+                        mode = MODE_UP;
+                    } else {
+                        mode = MODE_DOWN;
+                    }
+                    movePending = false;
+                }
+
+                switch (mode) {
+                    case MODE_LEFT:
+                        Toast.makeText(getContext(), "To Left!!!", Toast.LENGTH_SHORT).show();
+                        goToUp();
+                        dropNextNumber();
+                        break;
+
+                    case MODE_RIGHT:
+                        Toast.makeText(getContext(), "To Right!!!", Toast.LENGTH_SHORT).show();
+                        goToDown();
+                        dropNextNumber();
+                        break;
+
+                    case MODE_UP:
+                        Toast.makeText(getContext(), "To Up!!!", Toast.LENGTH_SHORT).show();
+                        goToLeft();
+                        dropNextNumber();
+                        break;
+
+                    case MODE_DOWN:
+                        Toast.makeText(getContext(), "To Down!!!", Toast.LENGTH_SHORT).show();
+                        goToRight();
+                        dropNextNumber();
+                        break;
+                }
                 break;
         }
         return true;
